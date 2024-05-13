@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/snowly-icon.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/snowly-icon.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/snowly-icon.png" type="image/png" sizes="48x48">
+  <title>Snowly App</title>
+  <meta name="description" content="SnowlyChat is a real-time video-sharing application that allows users to watch videos together with friends or family in private or public rooms.">
+
+
+  <style>
+    body {
+      background-color: #36393f; /* Darker shade for Discord-like feel */
+      display: flex;
+      justify-content: space-between;
+      margin: 0; /* Reset default margin */
+      font-family: Arial, sans-serif; /* Change font for better readability */
+      color: #dcddde; /* Default text color */
+    }
+    .video-container {
+      border: 2px solid #202225; /* Slightly lighter border color */
+      border-radius: 8px; /* Slightly reduce border radius */
+      padding: 10px;
+      margin: 20px auto;
+      max-width: calc(100vw - 700px);
+      max-height: calc(100vh - 730px);
+      background-color: #202225; /* Darker background color */
+      margin-right: 35%;
+      top: 40%;
+    }
+    #currentSongText {
+      margin-top: 30px;
+      text-decoration: underline; /* Add underline to the text */
+    }
+    #queuedVidText {
+      text-decoration: underline; /* Add underline to the text */
+    }
+    video {
+      width: 100%;
+      border-radius: 8px; /* Slightly reduce border radius */
+    }
+    .controls {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .controls button {
+      background-color: #7289da;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      margin: 0 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .controls button:hover {
+      background-color: #677bc4;
+    }
+    .userlist h2 {
+      margin-top: 0;
+    }
+    #userList {
+      list-style: none;
+      padding: 0;
+    }
+    #userList li {
+      display: flex; /* Use flexbox */
+      align-items: center; /* Vertically center items */
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .rainbow {
+        animation: rainbow 5s infinite;
+    }
+    @keyframes rainbow {
+      0% { color: red; }
+      16.67% { color: orange; }
+      33.33% { color: yellow; }
+      50% { color: green; }
+      66.67% { color: blue; }
+      83.33% { color: indigo; }
+      100% { color: violet; }
+    }
+    #userList li img {
+      margin-right: 10px; /* Add margin to separate the image from the username */
+    }
+    /* Default border color */
+    #userList li {
+      border: 1px solid #40444b; /* Slightly lighter border color */
+    }
+    /* Green border for userIsTalking */
+    #userList li.talking {
+      border-color: #43b581; /* Green */
+    }
+    /* Gray border for userIsNotTalking */
+    #userList li.not-talking {
+      border-color: #40444b; /* Gray */
+    }
+    .sidebar {
+      width: 300px;
+      background-color: #2f3136; /* Discord-like sidebar color */
+      overflow-y: auto;
+      padding: 20px;
+      color: #dcddde;
+      height: calc(100vh - 58px);
+    }
+    #searchResults {
+      list-style: none;
+      padding: 0;
+      overflow-y: auto;
+      max-height: calc(100vh - 205px);
+    }
+    #currentlyPlaying {
+      list-style: none;
+      padding: 0;
+      overflow-y: auto;
+      max-height: calc(100vh - 205px);
+    }
+    .sidebar h2 {
+      margin-top: 0;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .thumbnail {
+      width: 265px;
+      height: 180px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 8px;
+      margin-right: 10px;
+    }
+    .userlist {
+      width: 150px;
+      background-color: #2f3136; /* Discord-like sidebar color */
+      overflow-y: auto;
+      padding: 20px;
+      color: #dcddde;
+      position: fixed;
+      right: 0px; /* Adjust this value according to your preference */
+      top: 0px; /* Adjust this value according to your preference */
+      bottom: 0;
+    }
+    .sidebar li {
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #40444b; /* Slightly lighter border color */
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .sidebar li:hover {
+      background-color: #40444b; /* Slightly darker background on hover */
+    }
+    .sidebar a {
+      color: #dcddde;
+      text-decoration: none;
+    }
+    .sidebar a:hover {
+      text-decoration: underline;
+    }
+    .search-bar {
+      margin-bottom: 20px;
+    }
+    .search-bar input[type="text"] {
+      width: calc(100% - 10px);
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid #4f545c; /* Slightly lighter border color */
+      background-color: #36393f; /* Darker background color */
+      color: #dcddde;
+      height: 25px;
+    }
+    .search-bar button {
+      padding: 5px 10px;
+      background-color: ##7289da; /* Slightly lighter background color */
+      color: #dcddde;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .search-bar button:hover {
+      background-color: #677bc4; /* Darker shade on hover */
+    }
+    #chatbox {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background-color: #36393f;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    #chatbox-messages {
+      max-height: 180px;
+      overflow-y: auto;
+      margin-left: 10px;
+      margin-bottom: 10px;
+      backdrop-filter: blur(5px); /* Apply a blur effect */
+      background-color: rgba(54, 57, 63, 0.6); /* Set background color with opacity */
+    }
+
+    #chatbox-input {
+      width: calc(100% - 100px);
+      padding: 8px;
+      margin-right: 10px;
+      border-radius: 5px;
+      border: 1px solid #4f545c;
+      background-color: #2f3136;
+      color: #dcddde;
+    }
+    #chatbox-send {
+      padding: 8px 15px;
+      background-color: #7289da;
+      color: #dcddde;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #chatbox-send:hover {
+      background-color: #36393f;
+    }
+    .notification {
+      position: fixed;
+      right: 20px;
+      background-color: #2f3136; /* Discord-like notification background */
+      color: #dcddde;
+      border-radius: 5px;
+      padding: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      display: none;
+    }
+    .notification-content {
+      display: flex;
+      flex-direction: column;
+    }
+    .notification-title {
+      margin: 0;
+    }
+    .notification-description {
+      margin: 5px 0 0 0;
+    }
+    .notification-success {
+      background-color: #43b581; /* Success color from Discord */
+      color: #dcddde;
+    }
+    .notification-warning {
+      background-color: #faa61a; /* Warning color from Discord */
+      color: #dcddde;
+    }
+    .notification-error {
+      background-color: #f04747; /* Error color from Discord */
+      color: #dcddde;
+    }
+    #searchButton {
+      margin-top: 20px;
+      background-color: #677bc4;
+      height: 35px;
+      width: 55px
+    }
+    
+    #roomOverlay {
+      position: absolute;
+      top: 0%;
+      left: 0%;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999999;
+      backdrop-filter: blur(5px); /* Apply a blur effect */
+      background-color: rgba(54, 57, 63, 0.6); /* Set background color with opacity */
+    }
+
+    .overlay-content {
+      background-color: #36393f; /* Discord-like form background */
+      padding: 20px;
+      border-radius: 10px; /* Slightly increase border radius */
+      text-align: center;
+      margin-top: 20%;
+      margin-left: 40%;
+      width: 350px;
+    }
+
+    .overlay-text {
+      color: #dcddde;
+    }
+
+    .overlay-input {
+      padding: 10px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #40444b;
+      color: #dcddde;
+    }
+
+    .overlay-button {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #7289da;
+      color: #dcddde;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .overlay-button:hover {
+      background-color: #677bc4;
+    }
+    
+    #usernameOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(54, 57, 63, 0.6); /* Set background color with opacity */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      backdrop-filter: blur(5px); /* Apply a blur effect */
+    }
+
+    #usernameForm {
+      padding: 20px;
+      border-radius: 10px; /* Slightly increase border radius */
+      text-align: center;
+    }
+    #usernameInput {
+      padding: 10px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #40444b; /* Slightly lighter background color */
+      color: #dcddde;
+    }
+
+    #usernameInputText {
+      color: #dcddde;
+    }
+    #submitUsernameButton {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #7289da; /* Slightly lighter background color */
+      color: #dcddde;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    #joinOrCreateRoomButton {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #7289da; /* Slightly lighter background color */
+      color: #dcddde;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    
+    #choosePFPButton {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #7289da; /* Slightly lighter background color */
+      color: #dcddde;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    #submitUsernameButton:hover {
+      background-color: #677bc4; /* Darker shade on hover */
+    }
+  </style>
+</head>
+<body>
+  <div id="roomOverlay">
+    <div style="background-color: #36393f; padding: 20px; border-radius: 10px; text-align: center; z-index: 99999999" class="overlay-content">
+      <h2 class="overlay-text">Room Name</h2>
+      <input type="text" id="roomOverlayInput" class="overlay-input" placeholder="Room name" />
+      <button id="roomSubmitButton" class="overlay-button">Submit</button>
+    </div>
+  </div>
+  <div id="usernameOverlay">
+    <div style="background-color: #36393f; padding: 20px; border-radius: 10px; text-align: center;">
+      <h2 id="usernameInputText">Enter Your Username</h2>
+      <input type="text" id="usernameInput" placeholder="Username" style="padding: 10px; margin-bottom: 10px" />
+      <button id="submitUsernameButton" style="padding: 10px 20px; cursor: pointer">Submit</button>
+      <!-- Add the "Choose PFP" button -->
+      <input type="file" id="fileInput" accept="image/*" style="display: none" <!-- Hide the file input -->
+      <button
+        id="choosePFPButton"
+        style="position: relative; padding: 10px 20px; cursor: pointer; margin-top: 10px"
+      >
+        Choose PFP
+        <!-- Position the "Choose File" button over the "Choose PFP" button -->
+        <input
+          type="file"
+          id="fileInput"
+          accept="image/*"
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;"
+        />
+      </button>
+    </div>
+  </div>
+  <div class="sidebar">
+    <div class="search-bar">
+      <input type="text" placeholder="Search..." />
+      <button id="searchButton">Play</button>
+      <h2 id="currentSongText">Currently Playing</h2>
+      <ul id="currentlyPlaying"></ul>
+    </div>
+    <h2 id="queuedVidText">Queued Videos</h2>
+    <ul id="searchResults"></ul>
+  </div>
+  <div class="userlist">
+    <h2>User List</h2>
+    <ul id="userList"></ul>
+    <button id="joinOrCreateRoomButton">Join or Create room</button>
+  </div>
+  <div id="notificationList"></div>
+  <div class="video-container">
+    <video id="videoPlayer" controls>
+      Your browser does not support the video tag.
+    </video>
+    <div class="controls">
+      <button id="playButton">Play</button>
+      <button id="pauseButton">Pause</button>
+      <button id="syncButton">Sync</button>
+      <button id="restartButton">Restart</button>
+      <button id="skipButton">Skip</button>
+    </div>
+     <div id="chatbox">
+        <div id="chatbox-messages"></div>
+        <input type="text" id="chatbox-input" placeholder="Type your message..." />
+        <button id="chatbox-send">Send</button>
+      </div>
+    </div>
+  <script src="https://cdn.socket.io/4.4.0/socket.io.min.js"></script>
+  <script src="script.js"></script>
+  <div id="cursors"><div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+[
+  {
+    "permissions": [
+      "Owner",
+      "Furry",
+      "Cutie"
+    ],
+    "hash": "4ecff92dd083d96644572b4e2b7bd9e92644de8c7f3a8558ead85911dc042f7a",
+    "username": "Snoofz"
+  },
+  {
+    "permissions": [
+      "Admin",
+      "Furry",
+      "Cutie"
+    ],
+    "hash": "083675ceb45dfd7e35161d5db9e45893b34bfd3489bb70f503b2b5aac2ee527e",
+    "username": "Lust"
+  }
+]
