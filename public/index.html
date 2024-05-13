@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="icon"
+            href="/snowly-icon.png"
+            type="image/png"
+            sizes="16x16"
+        />
+        <link
+            rel="icon"
+            href="/snowly-icon.png"
+            type="image/png"
+            sizes="32x32"
+        />
+        <link
+            rel="icon"
+            href="/snowly-icon.png"
+            type="image/png"
+            sizes="48x48"
+        />
+        <link rel="stylesheet" href="video.css" />
+        <title>Snowly Chat</title>
+        <meta
+            name="description"
+            content="SnowlyChat is a real-time video-sharing application that allows users to watch videos together with friends or family in private or public rooms."
+        />
+    </head>
+    <body>
+        <div id="roomOverlay">
+            <div
+                style="
+                    background-color: #36393f;
+                    padding: 20px;
+                    border-radius: 10px;
+                    text-align: center;
+                    z-index: 99999999;
+                "
+                class="overlay-content"
+            >
+                <h2 class="overlay-text">Room Name</h2>
+                <input
+                    type="text"
+                    id="roomOverlayInput"
+                    class="overlay-input"
+                    placeholder="Room name"
+                />
+                <button id="roomSubmitButton" class="overlay-button">
+                    Submit
+                </button>
+            </div>
+        </div>
+        <div id="usernameOverlay">
+            <div
+                style="
+                    background-color: #36393f;
+                    padding: 20px;
+                    border-radius: 10px;
+                    text-align: center;
+                "
+            >
+                <h2 id="usernameInputText">Enter Your Username</h2>
+                <input
+                    type="text"
+                    id="usernameInput"
+                    placeholder="Username"
+                    style="padding: 10px; margin-bottom: 10px"
+                />
+                <button
+                    id="submitUsernameButton"
+                    style="padding: 10px 20px; cursor: pointer"
+                >
+                    Submit
+                </button>
+                <!-- Add the "Choose PFP" button -->
+                <input
+                    type="file"
+                    id="fileInput"
+                    accept="image/*"
+                    style="display: none"
+                    <!--
+                    Hide
+                    the
+                    file
+                    input
+                    --
+                />
+                <button
+                    id="choosePFPButton"
+                    style="
+                        position: relative;
+                        padding: 10px 20px;
+                        cursor: pointer;
+                        margin-top: 10px;
+                    "
+                >
+                    Choose PFP
+                    <!-- Position the "Choose File" button over the "Choose PFP" button -->
+                    <input
+                        type="file"
+                        id="fileInput"
+                        accept="image/*"
+                        style="
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            opacity: 0;
+                            cursor: pointer;
+                        "
+                    />
+                </button>
+            </div>
+        </div>
+        <div class="sidebar">
+            <div class="search-bar">
+                <input type="text" placeholder="Search..." />
+                <button id="searchButton">Play</button>
+                <h2 id="currentSongText">Currently Playing</h2>
+                <ul id="currentlyPlaying"></ul>
+            </div>
+            <h2 id="queuedVidText">Queued Videos</h2>
+            <ul id="searchResults"></ul>
+        </div>
+        <div class="userlist">
+            <h2>User List</h2>
+            <ul id="userList"></ul>
+            <button id="joinOrCreateRoomButton">Join or Create room</button>
+        </div>
+        <div id="notificationList"></div>
+        <div class="video-container">
+            <video id="videoPlayer" controls>
+                Your browser does not support the video tag.
+            </video>
+            <div class="controls">
+                <button id="playButton">Play</button>
+                <button id="pauseButton">Pause</button>
+                <button id="syncButton">Sync</button>
+                <button id="restartButton">Restart</button>
+                <button id="skipButton">Skip</button>
+            </div>
+            <div id="chatbox">
+                <div id="chatbox-messages"></div>
+                <input
+                    type="text"
+                    id="chatbox-input"
+                    placeholder="Type your message..."
+                />
+                <button id="chatbox-send">Send</button>
+            </div>
+        </div>
+        <script src="https://cdn.socket.io/4.4.0/socket.io.min.js"></script>
+        <script src="script.js"></script>
+        <div id="cursors"></div>
+    </body>
+</html>
